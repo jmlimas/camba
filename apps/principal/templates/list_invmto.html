@@ -1,0 +1,90 @@
+{% extends "base_principal.html" %}
+{% block title %}Inicio{% endblock title %}
+{% load static from staticfiles %}   
+
+{% block content %}  
+
+{% include "navbar.html" %} 
+
+{% load humanize %}
+
+    <form class="form-horizontal" method="post">{% csrf_token %}    
+               <div class="container">
+        <div class="page-header">
+            <br>
+            <h4> 
+                <br>
+                <a href="/" class="btn btn-success">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Regresar
+                </a>             
+                <a class="btn btn-warning pull-right" href="/addmovinv">
+                    <span class="glyphicon glyphicon-plus"></span> Movimientos De Inventario
+                </a>
+                 <h4>Listado de Inventario</h4>
+            </h4>
+        </div><!-- page-header -->
+
+          <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Articulo</th>
+                        <th>Precio</th>
+                        <th>Existencia</th>
+                        <th>Total Monto</th>
+                        <th>Almacen</th> 
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                        
+                        {%for a in inve %}
+                        <tr>
+                            <td>
+                                 {{a.id}}
+                            </td>  
+                             <td>
+                                 {{a.articulo}}
+                            </td> 
+                            <td>
+                                ${{a.articulo.precio|intcomma}} 
+                            </td>
+
+                            <td>
+                                {{a.existencia}}
+                            </td>   
+                            <td>
+                                ${{a.preciototal|intcomma}}
+                            </td>        
+                            <td>
+                                {{a.almacen}}
+                            </td>
+                                             
+                        </tr>
+                        {%endfor%}
+                        
+                        </tbody>
+                </table>
+                Total productos : {{stock}}  <br>
+                Total inventario :  
+            </div><!-- col-md-12 -->
+        </div><!-- /row -->
+    </div><!-- /container -->
+      {% if paginator.num_pages > 1 %}
+            <div class="pager">
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+                    {% endif %}
+                    <li><a href="#">Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a></li>
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+{% endblock content %}
+
+ 

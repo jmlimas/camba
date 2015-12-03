@@ -1,0 +1,174 @@
+{% extends "base_principal.html" %}
+{% block title %}Inicio{% endblock title %}
+{% load static from staticfiles %}   
+
+{% block content %}  
+
+    {% include "navbar.html" %} 
+
+    <form class="form-horizontal" method="post">{% csrf_token %}    
+                <div class="panel panel-primary">
+                    <!-- <div class="panel-heading">Alumnos</div>  -->
+                    <div class="panel-body">
+                        <div class="page-header">
+                            <br>
+                        <h3>
+                            <a href="/" class="btn btn-success">
+                            <span class="glyphicon glyphicon-chevron-left"></span> Regresar
+                            </a>
+                            <strong>Nueva Venta</strong>
+                        </h3>                                                        
+                        </div><!-- page-header -->
+
+                        <div class="row">                            
+                            <div class="col-xs-12 col-sm-6"> 
+                                <div class="form-group">
+                                    <label for="cliente" class="hidden-xs col-sm-2">Nombre:</label>
+                                    <div class="col-sm-10">
+                                        {{form.cliente}} 
+                                        {{form.cliente_display}}
+                                        {{form.cliente_display.error}}
+                                    </div>
+                                </div>   
+                                
+                                <div class="form-group">
+                                    <label for="Articulo" class="hidden-xs col-sm-2">Articulo:</label>
+                                    <div class="col-sm-10">
+                                        {{form.inventario}}
+                                        {{form.inventario.errors}}
+                                    </div>
+                                    <div id="datos">
+                                        
+                                    </div>
+                                </div>  
+
+                                <div class="form-group">
+                                    <label for="cantidad" class="hidden-xs col-sm-2">Cantidad:</label>
+                                    <div class="col-sm-10">
+                                        {{form.cantidad}}
+                                        {{form.cantidad.errors}}
+                                    </div>
+                                </div>   
+  
+                                <div class="form-group">
+                                    <label for="enganche" class="hidden-xs col-sm-2">Enganche:</label>
+                                    <div class="col-sm-10">
+                                        {{form.enganche}}
+                                        {{form.enganche.errors}}
+                                    </div>
+                                </div>   
+
+                                <div class="form-group">
+                                    <label for="fechaventa" class="hidden-xs col-sm-2">Fecha Venta:</label>
+                                    <div class="col-sm-10">
+                                        {{form.fechaventa}}
+                                        {{form.fechaventa.errors}}
+                                    </div>
+                                </div>   
+                           </div> <!-- class="col-xs-12 col-sm-6" -->
+
+                           <div class="col-xs-12 col-sm-6">  
+
+                                <div class="form-group">
+                                    <label for="vendedor" class="hidden-xs col-sm-2">Vendedor:</label>
+                                    <div class="col-sm-10">
+                                        {{form.vendedor}}
+                                        {{form.vendedor.errors}}
+                                    </div>
+                                </div>   
+
+                                 <div class="form-group">
+                                    <label for="apartir" class="hidden-xs col-sm-2">Apartir:</label>
+                                    <div class="col-sm-10">
+                                        {{form.apartir}}
+                                        {{form.apartir.errors}}
+                                    </div>
+                                </div>   
+
+                                 <div class="form-group">
+                                    <label for="abono" class="hidden-xs col-sm-2">Abono a Pagar:</label>
+                                    <div class="col-sm-10">
+                                        {{form.abono}}
+                                        {{form.abono.errors}}
+                                    </div>
+                                </div>   
+
+                                 <div class="form-group">
+                                    <label for="tipocobro" class="hidden-xs col-sm-2">Tipo Cobro:</label>
+                                    <div class="col-sm-10">
+                                        {{form.tipocobro}}
+                                        {{form.tipocobro.errors}}
+                                    </div>
+                                </div>   
+                                 <div class="form-group">
+                                    <label for="observacion" class="hidden-xs col-sm-2">Observacion:</label>
+                                    <div class="col-sm-10">
+                                        {{form.observacion}}
+                                        {{form.observacion.errors}}
+                                    </div>
+                                </div>   
+
+                          </div> <!-- class="col-xs-12 col-sm-6" -->                           
+                        </div> <!--<div class="row"> -->
+                        
+
+                        <div class="panel-footer color-footer">
+                            <button type="submit" class="btn btn-primary">
+                                 Grabar
+                            </button>
+                        </div>
+ 
+
+                    </div>
+                </div>
+            </form>
+
+
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script>
+         $( document ).ready( function() {
+          $("#id_cliente_display").autocomplete({
+           source: '/auto',
+           dataType: "jsonp",
+           selectFirst: true,
+           minLength: 4,
+           select: function(event,ui) {
+            $("#id_cliente").val(ui.item.id)
+           }
+          });
+         });
+ </script>
+ 
+ <script>
+    $("#id_inventario").on('change', mostrarEx);
+    function mostrarEx() {
+      //alert($(this).val());
+      $.ajax({
+        data: {'id': $(this).val()},
+        type: "GET",
+        url: '/ajax-listexis/',
+        success: function(data){
+          var html="";
+           //console.log(data); 
+           var object = JSON.parse(data);
+           var html = "<p>" + object.existencia + "</p>";
+          $('#datos').html(html);
+          }            
+      });
+    }
+  </script>
+
+
+<script src="{% static 'js/vendor/jquery-datepicker-es.js' %}"></script>
+<script>
+  $(function(){ 
+    $( "#id_fechaventa" ).datepicker();  
+    $(" #id_apartir").datepicker(); 
+  });
+  </script>
+ 
+ 
+
+{% endblock content %}

@@ -1,0 +1,107 @@
+{% extends "base_principal.html" %}
+{% block title %}Inicio{% endblock title %}
+{% load static from staticfiles %}   
+
+{% block content %}  
+
+{% include "navbar.html" %} 
+
+    <form class="form-horizontal" method="post">{% csrf_token %}    
+               <div class="container"> 
+        <div class="page-header">
+            <br>
+            <h4> 
+                <br>
+                <a href="/" class="btn btn-success">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Regresar
+                </a>             
+                
+                 <h5>Listado de Cobros </h5>
+            </h4>
+        </div><!-- page-header -->
+
+          <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Cliente</th>
+                        <th>Articulo</th> 
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>abono</th>
+                        <th>tipocobro</th>
+                        <th>Saldo</th>
+                        <th>Fecha Venta</th>
+                        <th>Proximo Cobro</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        
+                        
+                        {%for a in cobros %}
+                        <tr>
+                            <td>
+                                {{a.id}}  
+                            </td>
+                            <td>
+                                 {{a.venta}}
+                            </td> 
+                            <td>
+                                {{a.venta.articulo}}
+                            </td>
+                            <td>
+                            	{{a.venta.cantidad}}
+                            </td>
+
+                            <td>
+                                {{a.total|default_if_none:0}}
+                              
+                            </td>    
+                            <td>
+                                {{a.venta.abono}}
+                            </td>
+                            <td>
+                            	{{a.venta.tipocobro}}
+                            </td>
+                            <td>
+                                {{a.saldo}}
+                            </td>
+                            <td>
+                                {{a.venta.fechaventa}}
+                            </td>  
+                            <td>
+                                {{a.proxcobro}}
+                            </td>     
+                             
+                            <td>
+                                <td class="text-right">
+                                  <a href="{% url 'venta_app:det_cxc' a.id %}"  class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
+                            </td>                        
+                        </tr>
+                        {%endfor%}
+                          
+ 
+                        </tbody>
+                </table>
+            </div><!-- col-md-12 -->
+        </div><!-- /row -->
+    </div><!-- /container -->
+ ∫       {% if paginator.num_pages > 1 %}
+            <div class="pager">
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+                    {% endif %}
+                    <li><a href="#">Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</a></li>
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+      
+{% endblock content %}
+
+ 
