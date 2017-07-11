@@ -5,9 +5,10 @@
 {% block content %}  
 
 {% include "navbar.html" %} 
+{% load humanize %}
 
-    <form class="form-horizontal" method="post">{% csrf_token %}    
-               <div class="container"> 
+   
+    <div class="container"> 
         <div class="page-header">
             <br>
             <h4> 
@@ -16,69 +17,92 @@
                     <span class="glyphicon glyphicon-chevron-left"></span> Regresar
                 </a>             
                 
-                 <h5>Listado de Cobros </h5>
+                <h4>Auxiliar de Clientes</h4>
             </h4>
         </div><!-- page-header -->
 
+        <form action= "." method="GET"> 
+            <label for="q">Buscar</label>
+             <input id="aut" name = "q" autofocus type="search" placeholder="Nombre cliente o celular" value="{% if q %}{{ q }}{% else %}{% endif %}"                
+            <input type="submit" value="Search">
+        </form>
+ 
           <div class="row">
             <div class="col-md-12">
                 <table class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th>Folio</th>
-                        <th>Cliente</th>
-                        <th>Articulo</th> 
-                        <th>Cantidad</th>
-                        <th>Total</th>
-                        <th>abono</th>
-                        <th>tipocobro</th>
+                        <th>Nombre</th>
+                        <th>Artiuclo</th>
+                        <th>Venta</th>
+                        <th>Importe</th>
                         <th>Saldo</th>
-                        <th>Fecha Venta</th>
-                        <th>Proximo Cobro</th>
+                        <th>Abono</th>                         
+                        <th>Estatus</th> 
+                        <th>Estado</th>
+                        <th>Enganche</th>
                     </tr>
                     </thead>
                     <tbody>
                         
                         
-                        {%for a in cobros %}
+                        {%for a in cxcs %}
                         <tr>
                             <td>
-                                {{a.id}}  
+                                {{a.venta.id}}
                             </td>
                             <td>
-                                 {{a.venta}}
+                                 {{a.venta.cliente.nombre}}
                             </td> 
                             <td>
-                                {{a.venta.articulo}}
+                                {{a.venta.inventario.articulo}}
                             </td>
                             <td>
-                            	{{a.venta.cantidad}}
+                                 {% if a.tipo == 100 %}
+                                    venta
+                                 {% else %}
+                                    abono
+                                {% endif %}
+
                             </td>
 
                             <td>
-                                {{a.total|default_if_none:0}}
-                              
-                            </td>    
+                               {{a.total|default_if_none:""}}
+                            </td>           
                             <td>
-                                {{a.venta.abono}}
+                                ${{a.saldo|intcomma}}
                             </td>
                             <td>
-                            	{{a.venta.tipocobro}}
+                               {{a.abono|default_if_none:""}}
+                            </td>
+                            
+                            <!--
+                            <td>
+                                {% if a.tipo == 200 %}
+                                  {% if a.pagado = True %}
+                                      Si 
+                                  {% else %}
+                                      No
+                                  {% endif %}
+                                {% endif %}
+                                 
+                            </td>
+                            -->
+                            <td>
+                                {{a.venta.cliente.estado}}
                             </td>
                             <td>
-                                {{a.saldo}}
-                            </td>
-                            <td>
+
                                 {{a.venta.fechaventa}}
-                            </td>  
+                            </td>
                             <td>
-                                {{a.proxcobro}}
-                            </td>     
-                             
-                            <td>
-                                <td class="text-right">
-                                  <a href="{% url 'venta_app:det_cxc' a.id %}"  class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>
-                            </td>                        
+                                {% if a.tipo == 100 %}
+                                    {{a.venta.enganche}}
+                                {% endif %}
+                            </td>
+
+                            
                         </tr>
                         {%endfor%}
                           
@@ -88,7 +112,8 @@
             </div><!-- col-md-12 -->
         </div><!-- /row -->
     </div><!-- /container -->
- ∫       {% if paginator.num_pages > 1 %}
+
+    {% if paginator.num_pages > 1 %}
             <div class="pager">
                 <ul>
                     {% if page_obj.has_previous %}

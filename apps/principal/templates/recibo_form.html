@@ -27,6 +27,12 @@
                                     <div class="col-sm-10">
                                         {{form.articulo}} 
                                         {{form.articulo_display.error}}
+                                      
+                                        <a href="/articulo/create" id="add_articulo" onclick="return showAddPopup(this);"><img src = "{% static '/img/icon-addlink.svg' %}"></a>
+
+    <a id="edit_articulo" style="cursor: pointer; cursor: hand;"><img src = "{% static '/images/icon-changelink.svg' %}"></a>
+    <br><br>
+
                                     </div>
                                 </div>   
                                 
@@ -78,6 +84,27 @@
          });
  </script>
 
+ <script>
+
+$("#edit_articulo").click(function(){
+  nombre = $("#id_articulo option:selected").text();
+  var data = {"nombre":nombre};
+  console.log(data);
+    $.ajax({
+        type : 'GET',
+        url :  '/articulo/ajax/get_articulo_id',
+        data : data,
+        success : function(data){
+          var url = "/articulo/" + data['articulo_id'] + "/edit/";
+          showEditPopup(url);
+        },
+        error: function(data) {
+          alert("Algo salio mal.!!"); 
+        }
+    });
+})
+ </script>
+
 
 
 <script src="{% static 'js/vendor/jquery-datepicker-es.js' %}"></script>
@@ -86,5 +113,35 @@
     $( "#id_caducidad" ).datepicker();   
   });
   </script>
+
+  {% block script %}
+
+<script type="text/javascript">
+
+function showEditPopup(url) {
+    var win = window.open(url, "Edit", 
+        'height=500,width=800,resizable=yes,scrollbars=yes');
+    return false;
+}
+function showAddPopup(triggeringLink) {
+    var name = triggeringLink.id.replace(/^add_/, '');
+    href = triggeringLink.href;
+    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    win.focus();
+    return false;
+}
+function closePopup(win, newID, newRepr, id) {
+  alert("Va a cerrar");
+    $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+    win.close();
+}
+
+</script>
+
+
+
+{% endblock %}
+
+
 
 {% endblock content %}

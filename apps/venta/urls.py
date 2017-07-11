@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views
 
+
  
 urlpatterns = [
     url(r'^addventa/$', views.AddVenta.as_view(),name='add_venta'),  
@@ -11,9 +12,8 @@ urlpatterns = [
     url(r'^cxcdet/(?P<pk>\d+)/$',views.CxcDetalle.as_view(),name='det_cxc'),
    # url(r'^buscanombre_url/$','apps.venta.views.ListaAlumnos_ajax',name='aj_busanombre'),
     url(r'^auto/$','apps.venta.views.persona_auto_complete', name='persona_auto_complete'),
+    url(r'^lisauxcli/$',views.ListAuxCliente.as_view(),name ='list_auxcli'),
+    url(r'^lisprocxc/$',views.ListProCxc.as_view(),name='list_procxc'),
     url(r'^ajax-listexis/$','apps.venta.views.InvExisAjax'),
-
- 
-    
 ]
  

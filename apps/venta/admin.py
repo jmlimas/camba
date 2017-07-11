@@ -3,8 +3,8 @@ from .models import Venta, Cxc
 from apps.principal.models import Articulo
 
 class VentaAdmin(admin.ModelAdmin):
-	list_display = ('id','cliente','inventario','fechaventa','tipocobro')
-	list_filter = ('id','cliente',)
+	list_display = ('id','inventario','fechaventa','tipocobro')
+	list_filter = ('id',)
  
 
 class CxcAdmin(admin.ModelAdmin):

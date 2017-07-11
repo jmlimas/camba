@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'apps.principal',
     'apps.venta',
+    'apps.users',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -98,8 +99,9 @@ USE_I18N = True
 
 USE_L10N = False
 
-USE_TZ = True 
+USE_TZ = True  
 
+AUTH_USER_MODEL = 'users.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

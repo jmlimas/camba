@@ -4,13 +4,39 @@ from apps.principal.models import TimeStampModel
 
 class Venta(TimeStampModel):
 
-	op2 = (
+	opcob = (
 			('Semana', 'Semana'),
 			('Quincena', 'Quincena'),
 			('Mes', 'Mes'),
 		)
 
-	cliente = models.ForeignKey('principal.Cliente')
+	op = (
+			('1 piso', '1 piso'),
+			('2 pisos', '2 pisos'),
+		)
+
+	op2 = (
+			('Vigente', 'Vigente'),
+			('Cancelado', 'cancelado'),
+			('incobrabrle','incobrabrle'),
+		)
+
+	nombre = models.CharField(max_length=180)
+	celular = models.CharField(max_length=10, null=True, blank=True)
+	telefono = models.CharField(max_length=10, null=True, blank=True)
+	colonia = models.CharField(max_length=120)
+	calle = models.CharField(max_length=120)
+	numero = models.CharField(max_length=8)
+	lado = models.CharField(max_length=80)
+	frentre = models.CharField(max_length=80)
+	casa = models.CharField(max_length=8, choices=op)
+	fachada = models.CharField(max_length=80)
+	entre = models.CharField(max_length=120)
+	municipio = models.CharField(max_length=120)
+	lon = models.FloatField(null=True, blank=True,default=1.63789)
+	lat = models.FloatField(null=True, blank=True,default=-77.7452081)
+	estado = models.CharField(max_length=25, choices=op2, default='Vigente',null=True, blank=True)
+
 	inventario = models.ForeignKey('principal.Inventario')
 	cantidad = models.IntegerField(default=0, null=True, blank=True)
 	enganche = models.DecimalField(max_digits=8, decimal_places=2)
@@ -19,10 +45,10 @@ class Venta(TimeStampModel):
 	apartir = models.DateField()
 	abono = models.DecimalField(max_digits=8, decimal_places=2,null=True, blank=True)
 	observacion = models.TextField() 
-	tipocobro = models.CharField(max_length=10, choices=op2, default='Semana')
+	tipocobro = models.CharField(max_length=10, choices=opcob, default='Semana')
 
 	def __unicode__(self):
-		return self.cliente.nombre
+		return self.nombre
 
 
 	def monto(self):
@@ -41,6 +67,6 @@ class Cxc(TimeStampModel):
 	status = models.BooleanField(default=False)
 
 	def __unicode__(self):
-		return self.venta.cliente.nombre
+		return self.venta.nombre
  
 

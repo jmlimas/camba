@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import CreateView,ListView,DetailView
 from .models import Venta, Cxc
-from apps.principal.models import Articulo,Inventario,Cliente
-from .forms import VentaForm,CobroForm
+from apps.principal.models import Articulo,Inventario
+from .forms import VentaForm,CobroForm, pronosticocxc
 from django.views.generic.edit import FormMixin
 
 from datetime import date
@@ -14,6 +14,7 @@ from datetime import datetime
 
 from django.http import JsonResponse
 from django.shortcuts import redirect
+from django.db.models import Sum
 
 class AddVenta(CreateView):
 	form_class = VentaForm
@@ -141,24 +142,72 @@ class CxcDetalle(FormMixin,DetailView):
  
  
 
-def persona_auto_complete(request):
-	#q = request.REQUEST['term']
-	q = request.GET.get('term','')
- 	if q:
-  		qset = (
-   		Q(nombre__icontains=q)    		
-   	)
-  		personas = Cliente.objects.filter(qset).distinct()
-  		personas_list = []
- 	else:
-  		personas = []
- 		personas_list = []
+#def persona_auto_complete(request):
+#	q = request.GET.get('term','')
+#	if q:
+# 		qset = (
+#   		Q(nombre__icontains=q)    		
+#   	)
+#  		personas = Cliente.objects.filter(qset).distinct()
+#  		personas_list = []
+# 	else:
+#  		personas = []
+# 		personas_list = []
 
- 	for p in personas:
-  		value = '%s, (%s)' % (p.nombre,p.calle+' '+ p.numero)
-  		p_dict = {'id': p.id, 'label': value, 'value': value}
-  		personas_list.append(p_dict)
- 	return HttpResponse(simplejson.dumps(personas_list))
+# 	for p in personas:
+#  		value = '%s, (%s)' % (p.nombre,p.calle+' '+ p.numero)
+#  		p_dict = {'id': p.id, 'label': value, 'value': value}
+#  		personas_list.append(p_dict)
+# 	return HttpResponse(simplejson.dumps(personas_list))
+
+
+class ListAuxCliente(ListView): 
+	model = Cxc
+	context_object_name = 'cxcs'
+	template_name = 'list_auxcliente.html' 
+ 	
+	def get_queryset(self):
+		search_query = self.request.GET.get('q',None)
+		if search_query:
+			queryset = super(ListAuxCliente, self).get_queryset() 
+		else:
+			queryset =""
+		 
+		q = self.request.GET.get('q', '') 
+				
+		if q:
+		    queryset = queryset.filter(
+		        Q(venta__cliente__nombre__icontains=q)|
+		        Q(venta__cliente__celular__icontains=q) 
+		       
+		    )		
+		return queryset 
+ 
+class ListProCxc(FormMixin, ListView):
+	model = Cxc
+	form_class = pronosticocxc
+	context_object_name = 'cxcs'
+	template_name = 'listprocxc.html'
+
+	def get_context_data(self, **kwargs):
+		ini = self.request.GET.get('fechaini')	 
+		fin = self.request.GET.get('fechafin')	
+		print ini
+		
+
+		#context = super(ListProCxc,self).get_context_data(**kwargs)
+		#if inix !=None:
+		#	ini = datetime.strptime(str(inix), '%Y-%m-%d')
+		#	fin = datetime.strptime(str(finx), '%Y-%m-%d')
+		context = super(ListProCxc,self).get_context_data(**kwargs)
+		context['xcobrar'] = Cxc.objects.filter(proxcobro__range=[ini,fin],tipo=200,pagado=False,status=False).order_by('proxcobro')
+		context['sumxcobrar'] =  Cxc.objects.filter(
+			proxcobro__range=[ini,fin],tipo=200,pagado=False,status=False
+			).aggregate(Sum('venta__abono')).values()[0]
+
+		return context
+ 
+  
 
 def InvExisAjax(request):
 	if request.is_ajax():
@@ -167,3 +216,4 @@ def InvExisAjax(request):
 		return HttpResponse(response.content)
 	else:
 		return redirect('/')
+

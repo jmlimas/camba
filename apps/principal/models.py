@@ -37,40 +37,35 @@ class Inventario(TimeStampModel):
 		return self.articulo.precio*self.existencia
 
 
+#class Cliente(TimeStampModel):
+#	op = (
+#			('1 piso', '1 piso'),
+#			('2 pisos', '2 pisos'),
+#		)
+#	op2 = (
+#			('Vigente', 'Vigente'),
+#			('Cancelado', 'cancelado'),
+#			('incobrabrle','incobrabrle'),
+#		)
 
+#	nombre = models.CharField(max_length=180)
+#	celular = models.CharField(max_length=10, null=True, blank=True)
+#	telefono = models.CharField(max_length=10, null=True, blank=True)
+#	colonia = models.CharField(max_length=120)
+#	calle = models.CharField(max_length=120)
+#	numero = models.CharField(max_length=8)
+#	lado = models.CharField(max_length=80)
+#	frentre = models.CharField(max_length=80)
+#	casa = models.CharField(max_length=8, choices=op)
+#	fachada = models.CharField(max_length=80)
+#	entre = models.CharField(max_length=120)
+#	municipio = models.CharField(max_length=120)
+#	lon = models.FloatField(null=True, blank=True,default=1.63789)
+#	lat = models.FloatField(null=True, blank=True,default=-77.7452081)
+#	estado = models.CharField(max_length=25, choices=op2, default='Vigente',null=True, blank=True)
 
-
-class Cliente(TimeStampModel):
-	op = (
-			('1 piso', '1 piso'),
-			('2 pisos', '2 pisos'),
-		)
-
-	op2 = (
-			('Vigente', 'Vigente'),
-			('Cancelado', 'cancelado'),
-			('incobrabrle','incobrabrle'),
-		)
-
-	nombre = models.CharField(max_length=180)
-	celular = models.CharField(max_length=10, null=True, blank=True)
-	telefono = models.CharField(max_length=10, null=True, blank=True)
-	colonia = models.CharField(max_length=120)
-	calle = models.CharField(max_length=120)
-	numero = models.CharField(max_length=8)
-	lado = models.CharField(max_length=80)
-	frentre = models.CharField(max_length=80)
-	casa = models.CharField(max_length=8, choices=op)
-	fachada = models.CharField(max_length=80)
-	entre = models.CharField(max_length=120)
-	municipio = models.CharField(max_length=120)
-	lon = models.FloatField(null=True, blank=True,default=1.63789)
-	lat = models.FloatField(null=True, blank=True,default=-77.7452081)
-	estado = models.CharField(max_length=25, choices=op2, default='Vigente',null=True, blank=True)
-
-
-	def __unicode__(self):
-		return self.nombre
+#	def __unicode__(self):
+#		return self.nombre
 
 
 class Vendedor(TimeStampModel):
